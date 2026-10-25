@@ -1,0 +1,49 @@
+{
+  "status": "first_manual_U_attempt_verified_with_throughput_gain",
+  "scope": "One exact-board Windows startup; repeated cold/warm starts and sleep/resume untested.",
+  "build_id": "9b309fa2bd74e763895023ed40834492c69607a2ced77583d8124e2dff6eb047",
+  "efi_sha256": "7ffe978a069647f6e9ac0615ef5b91afc7c8c188ea4514a947b06bfca6c52438",
+  "log_sha256": "84732d9dd819ecc0cd869db0c0359c4ff441cb424d2bdc45d32a2f14d4524206",
+  "hardware_log_checks": {
+    "manual_u": true,
+    "marker_and_halt": true,
+    "ss0_readback": true,
+    "ss1_readback": true,
+    "effective_readout_before_flr": true,
+    "flr_success": true,
+    "post_flr_containment": true,
+    "effective_readout_after_flr": true,
+    "transaction_cleanup": true,
+    "transaction_completed": true
+  },
+  "handoff_evidence": "User reports entering Windows after manual U; physical GPU has error code 0 and Driver API benchmarks work. The final pre-Windows check occurs after USB log closure; it has no direct log line.",
+  "permission_note": "Required WPR_CFG, WPR and FEAT checks passed; FBPA is optional on this board and remained 0xffffff0f. Post-FLR WPR permissions returned to entry values while selectors/effective full-speed readout persisted.",
+  "tolerated_timeouts": "Two Falcon pre-reset timeouts are explicitly tolerated for HW bug 3419321; subsequent firmware, halt, reset and containment checks passed.",
+  "pci_status_note": "Offset 0x80 changed 0x92930 to 0x2930, allowed sticky status bits 0x90000 after exactly one FLR.",
+  "limits": [
+    "One GPU and one successful manual-U startup; the two post-start benchmark rounds are not two starts.",
+    "FP16/FP32 and TF32 instruction measurements do not establish application speedups.",
+    "All-one output checks do not establish general numerical accuracy.",
+    "BF16 was not directly benchmarked in this Windows setup.",
+    "Clocks were sampled at timed-run boundaries; no continuous telemetry trace was collected.",
+    "Repeated cold/warm starts, sleep/resume and sustained stability remain unverified."
+  ],
+  "date": "2026-10-25",
+  "windows": {
+    "os": "Windows 10 Pro 22H2, build 19045",
+    "driver": "617.42",
+    "config_manager_error_code": 0,
+    "status": "OK"
+  },
+  "not_distributed": [
+    "EFI/cubin binaries",
+    "NVIDIA firmware/archives",
+    "ROM/PROM",
+    "UEFI loaded driver bytes",
+    "Windows boot manager",
+    "raw UEFI ownership captures",
+    "GPU UUID/device-instance suffix",
+    "partition GUIDs",
+    "host paths"
+  ]
+}

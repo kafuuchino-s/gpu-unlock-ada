@@ -1,6 +1,16 @@
 # GPU unlock 1.1.1 — RTX 4090 and RTX 4070 Ti SUPER
 
-New to this project? Start with the [copy-paste Quick Start](QUICKSTART.md).
+New to the Linux module? Start with the [copy-paste Quick Start](QUICKSTART.md).
+
+This branch also includes an **experimental Windows UEFI port for one RTX 4070
+Ti SUPER (`10de:2705`, subsystem `6688:2705`) on MSI Z590 MS-7D06**. One manual-U
+startup completed NVIDIA driver handoff; matched FP16/FP32 and TF32 instruction
+measurements improved by about 70% and 72% across all post-start samples.
+See the [Windows source/build guide](windows/README.md),
+[中文说明](windows/README.zh-CN.md) and
+[hardware report](docs/windows-ad103-2705-report.md). The port uses an exact
+machine profile and local private inputs; it is source-only and does not establish
+support for other boards, repeated starts or sleep/resume.
 
 This Linux kernel module enables the SM speed-select override before the stock
 NVIDIA driver starts. RTX 4090 (`10de:2684`, AD102) support has demonstrated

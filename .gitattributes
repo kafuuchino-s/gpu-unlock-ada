@@ -19,6 +19,7 @@
 /packaging -export-ignore
 /tests -export-ignore
 /tools -export-ignore
+/windows -export-ignore
 /requirements-research.txt -export-ignore
 *.bin export-ignore
 *.cu export-ignore
@@ -29,3 +30,4 @@
 # Keep published evidence bytes identical on Windows and Linux clones.
 /docs/evidence/ada2705/* -text
 /docs/evidence/rtx4090/* -text
+/docs/evidence/windows-ad103-2705/* -text

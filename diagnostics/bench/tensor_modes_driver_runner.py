@@ -8,6 +8,7 @@ import argparse
 import ctypes as C
 import hashlib
 import json
+import os
 from pathlib import Path
 import subprocess
 import time
@@ -39,6 +40,8 @@ def main():
     parser.add_argument("--expect-power-limit", type=float, required=True)
     parser.add_argument("--iters", type=int, default=20000)
     parser.add_argument("--reps", type=int, default=3)
+    parser.add_argument("--cuda-graph", action="store_true",
+                        help="Place timing events and kernel in one CUDA graph")
     args = parser.parse_args()
     assert args.cubin.is_file() and digest(args.cubin) == args.sha256
     assert 0 < args.iters <= 20000 and 1 <= args.reps <= 5
@@ -50,7 +53,7 @@ def main():
     assert len(fields) == 5 and fields[0] == args.expect_uuid, gpu
     assert abs(float(fields[4]) - args.expect_power_limit) < 0.01, gpu
 
-    lib = C.CDLL("libcuda.so.1")
+    lib = C.WinDLL("nvcuda.dll") if os.name == "nt" else C.CDLL("libcuda.so.1")
     def api(name, argtypes):
         function = getattr(lib, name)
         function.argtypes = argtypes
@@ -83,13 +86,61 @@ def main():
             cuGetErrorString(code, C.byref(message))
             raise RuntimeError(f"{step}: CUDA {code}: {message.value!r}")
 
+    if args.cuda_graph:
+        class KernelNodeParams(C.Structure):
+            _fields_ = [("func", C.c_void_p)] + [
+                (name, C.c_uint) for name in ("grid_x", "grid_y", "grid_z",
+                                             "block_x", "block_y", "block_z", "shared_bytes")
+            ] + [("params", C.POINTER(C.c_void_p)), ("extra", C.POINTER(C.c_void_p))]
+
+        graph_create = api("cuGraphCreate", [C.POINTER(C.c_void_p), C.c_uint])
+        graph_event = api("cuGraphAddEventRecordNode", [C.POINTER(C.c_void_p), C.c_void_p,
+                          C.POINTER(C.c_void_p), C.c_size_t, C.c_void_p])
+        graph_kernel = api("cuGraphAddKernelNode", [C.POINTER(C.c_void_p), C.c_void_p,
+                           C.POINTER(C.c_void_p), C.c_size_t, C.POINTER(KernelNodeParams)])
+        graph_instantiate = api("cuGraphInstantiateWithFlags", [C.POINTER(C.c_void_p),
+                                C.c_void_p, C.c_ulonglong])
+        graph_launch = api("cuGraphLaunch", [C.c_void_p, C.c_void_p])
+        graph_exec_destroy = api("cuGraphExecDestroy", [C.c_void_p])
+        graph_destroy = api("cuGraphDestroy", [C.c_void_p])
+
+        def graph_time(fn, params):
+            start, stop, graph, executable = (C.c_void_p() for _ in range(4))
+            first, kernel, last = (C.c_void_p() for _ in range(3))
+            try:
+                check(cuEventCreate(C.byref(start), 0), "graph start event")
+                check(cuEventCreate(C.byref(stop), 0), "graph stop event")
+                check(graph_create(C.byref(graph), 0), "cuGraphCreate")
+                check(graph_event(C.byref(first), graph, None, 0, start), "graph start node")
+                arguments = KernelNodeParams(fn, BLOCKS, 1, 1, THREADS, 1, 1, 0, params, None)
+                check(graph_kernel(C.byref(kernel), graph, C.byref(first), 1, C.byref(arguments)),
+                      "graph kernel node")
+                check(graph_event(C.byref(last), graph, C.byref(kernel), 1, stop), "graph stop node")
+                check(graph_instantiate(C.byref(executable), graph, 0), "graph instantiate")
+                check(graph_launch(executable, None), "graph launch")
+                check(cuEventSynchronize(stop), "graph synchronize")
+                ms = C.c_float()
+                check(cuEventElapsedTime(C.byref(ms), start, stop), "graph elapsed")
+                assert ms.value > 0
+                return float(ms.value)
+            finally:
+                if executable.value:
+                    check(graph_exec_destroy(executable), "graph executable destroy")
+                if graph.value:
+                    check(graph_destroy(graph), "graph destroy")
+                if stop.value:
+                    check(cuEventDestroy(stop), "graph stop destroy")
+                if start.value:
+                    check(cuEventDestroy(start), "graph start destroy")
+
     ctx = C.c_void_p()
     module = C.c_void_p()
     device_mem = C.c_uint64()
     started = time.time()
     report = {"gpu": gpu, "cubin_sha256": args.sha256, "iters": args.iters,
               "reps": args.reps, "blocks": BLOCKS, "threads": THREADS,
-              "warps": WARPS, "chains": CHAINS, "modes": {}}
+              "warps": WARPS, "chains": CHAINS, "modes": {},
+              "timing_mode": "graph-event-nodes" if args.cuda_graph else "direct-events"}
     check(cuInit(0), "cuInit")
     count = C.c_int()
     check(cuDeviceGetCount(C.byref(count)), "cuDeviceGetCount")
@@ -114,6 +165,9 @@ def main():
             check(cuCtxSynchronize(), "warmup sync " + name)
             times = []
             for _ in range(args.reps):
+                if args.cuda_graph:
+                    times.append(graph_time(fn, params))
+                    continue
                 start = C.c_void_p()
                 stop = C.c_void_p()
                 check(cuEventCreate(C.byref(start), 0), "cuEventCreate start")

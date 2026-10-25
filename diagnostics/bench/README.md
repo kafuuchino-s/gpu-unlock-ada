@@ -30,6 +30,25 @@ and clock policy** in both states. Record live clocks and restore the original
 workload afterward.
 
 This is an instruction-throughput probe, not a GEMM or inference benchmark.
+
+For the local Windows 2705 comparison, the standard-library wrapper can compile
+the same device source using the installed NVRTC and `ptxas`, without MSVC:
+
+```powershell
+python windows/benchmark_tensor.py --label baseline
+# After separately reviewing the UEFI attempt and Windows driver state:
+python windows/benchmark_tensor.py --label after-attempt
+```
+
+The wrapper retains the cubin and build hashes under `build/windows/benchmarks/`,
+records three runs of five measurements after warmup, and checks the GPU UUID,
+driver, power limit, binary, runner and launch settings against the saved baseline.
+It uses `--cuda-graph` to place the start event, kernel and stop event in one GPU
+graph. Live `nvidia-smi` polling runs during warmup only; snapshots between formal
+runs avoid concurrent polling inside the timed workloads. Ordinary desktop
+applications remain active, so keep their load comparable between states.
+The benchmark label itself does not establish that a hardware unlock succeeded.
+
 All-one inputs check the exercised arithmetic path but do not validate general
 numeric accuracy or predict application speedup. The
 [RTX 4070 Ti SUPER report](../../docs/ada-2705-report.md) records one matched

@@ -1,0 +1,875 @@
+{
+  "date": "2026-10-25",
+  "scope": "One manual-U Windows startup; two post-start rounds",
+  "gpu": {
+    "pci": "10de:2705",
+    "subsystem": "6688:2705",
+    "vbios": "95.03.45.40.a4"
+  },
+  "units": {
+    "f16_f32": "TFLOP/s",
+    "tf32": "TFLOP/s",
+    "u4_s32": "TOP/s"
+  },
+  "summary_statistic": "Median of all 15 timed samples per mode and round, after warmup",
+  "settings": {
+    "driver": "617.42",
+    "power_limit_w": 300.0,
+    "cubin_sha256": "b1274a5aa7a8469bf100b71a49bccb8372457913b692d094ce3692f8f92070a8",
+    "runner_sha256": "1f7bec7dcc83fdc09d31bc3bba6bbf118cdfdb39348833acd4f6bd797dcd7a27",
+    "runs": 3,
+    "iters": 20000,
+    "reps": 5,
+    "blocks": 1056,
+    "threads": 256,
+    "chains": 8,
+    "timing_mode": "graph-event-nodes",
+    "telemetry_policy": "warmup polling and between-run snapshots"
+  },
+  "rounds": [
+    {
+      "label": "stock",
+      "utc": "2026-10-25T10:40:32.753592+00:00",
+      "source_report_sha256": "b7f6d9c4a8fd06283438fdc392c0eee51396cf2fe9193a1a38ad3ee92e1a4abe",
+      "summary": {
+        "f16_f32": {
+          "median_Top_per_s": 88.17257111170905,
+          "min_Top_per_s": 84.86620435738975,
+          "max_Top_per_s": 90.37285576825082,
+          "measurements": 15,
+          "all_cells_matched": true
+        },
+        "tf32": {
+          "median_Top_per_s": 44.374299117791985,
+          "min_Top_per_s": 41.66145711150056,
+          "max_Top_per_s": 44.96905946349028,
+          "measurements": 15,
+          "all_cells_matched": true
+        },
+        "u4_s32": {
+          "median_Top_per_s": 702.9474298459477,
+          "min_Top_per_s": 666.7348927929387,
+          "max_Top_per_s": 728.5702804882685,
+          "measurements": 15,
+          "all_cells_matched": true
+        }
+      },
+      "processes": [
+        {
+          "process": 1,
+          "modes": {
+            "f16_f32": {
+              "instruction": "bench_f16_f32",
+              "k": 16,
+              "times_ms": [
+                63.18899154663086,
+                62.79142379760742,
+                61.36217498779297,
+                61.262657165527344,
+                61.78508758544922
+              ],
+              "rates_Top_per_s": [
+                87.6178135540319,
+                88.17257111170905,
+                90.2262881180694,
+                90.37285576825082,
+                89.60869841517999
+              ],
+              "best_Top_per_s": 90.37285576825082,
+              "expected_cell": 10240000,
+              "cells_checked": 270336,
+              "mismatches": 0
+            },
+            "tf32": {
+              "instruction": "bench_tf32",
+              "k": 8,
+              "times_ms": [
+                61.76579284667969,
+                62.448638916015625,
+                62.0840950012207,
+                62.17420959472656,
+                63.71430587768555
+              ],
+              "rates_Top_per_s": [
+                44.818345437118616,
+                44.32827821472431,
+                44.58856394613742,
+                44.52393778778,
+                43.447709299608206
+              ],
+              "best_Top_per_s": 44.818345437118616,
+              "expected_cell": 5120000,
+              "cells_checked": 270336,
+              "mismatches": 0
+            },
+            "u4_s32": {
+              "instruction": "bench_u4",
+              "k": 64,
+              "times_ms": [
+                31.326208114624023,
+                30.62611198425293,
+                31.504383087158203,
+                30.39641571044922,
+                31.39356803894043
+              ],
+              "rates_Top_per_s": [
+                706.9456041078145,
+                723.1059930619597,
+                702.9474298459477,
+                728.5702804882685,
+                705.4287391777291
+              ],
+              "best_Top_per_s": 728.5702804882685,
+              "expected_cell": 40960000,
+              "cells_checked": 270336,
+              "mismatches": 0
+            }
+          }
+        },
+        {
+          "process": 2,
+          "modes": {
+            "f16_f32": {
+              "instruction": "bench_f16_f32",
+              "k": 16,
+              "times_ms": [
+                63.24019241333008,
+                61.5463981628418,
+                65.23776245117188,
+                62.79065704345703,
+                64.95747375488281
+              ],
+              "rates_Top_per_s": [
+                87.5468759458264,
+                89.95621913326866,
+                84.86620435738975,
+                88.17364781146078,
+                85.23239836715211
+              ],
+              "best_Top_per_s": 89.95621913326866,
+              "expected_cell": 10240000,
+              "cells_checked": 270336,
+              "mismatches": 0
+            },
+            "tf32": {
+              "instruction": "bench_tf32",
+              "k": 8,
+              "times_ms": [
+                65.07647705078125,
+                65.63533020019531,
+                62.383872985839844,
+                61.55878448486328,
+                66.44608306884766
+              ],
+              "rates_Top_per_s": [
+                42.538268287631084,
+                42.176075469667744,
+                44.374299117791985,
+                44.96905946349028,
+                41.66145711150056
+              ],
+              "best_Top_per_s": 44.96905946349028,
+              "expected_cell": 5120000,
+              "cells_checked": 270336,
+              "mismatches": 0
+            },
+            "u4_s32": {
+              "instruction": "bench_u4",
+              "k": 64,
+              "times_ms": [
+                31.40608024597168,
+                31.75935935974121,
+                32.23244857788086,
+                31.776639938354492,
+                32.20889663696289
+              ],
+              "rates_Top_per_s": [
+                705.1476958141111,
+                697.3038992742596,
+                687.0692763688261,
+                696.9246957186876,
+                687.5716783972464
+              ],
+              "best_Top_per_s": 705.1476958141111,
+              "expected_cell": 40960000,
+              "cells_checked": 270336,
+              "mismatches": 0
+            }
+          }
+        },
+        {
+          "process": 3,
+          "modes": {
+            "f16_f32": {
+              "instruction": "bench_f16_f32",
+              "k": 16,
+              "times_ms": [
+                65.10797119140625,
+                62.80704116821289,
+                61.55673599243164,
+                65.16633605957031,
+                61.98175811767578
+              ],
+              "rates_Top_per_s": [
+                85.03538320559392,
+                88.15064644061046,
+                89.94111189847212,
+                84.95922304023587,
+                89.32436652552974
+              ],
+              "best_Top_per_s": 89.94111189847212,
+              "expected_cell": 10240000,
+              "cells_checked": 270336,
+              "mismatches": 0
+            },
+            "tf32": {
+              "instruction": "bench_tf32",
+              "k": 8,
+              "times_ms": [
+                62.106624603271484,
+                66.3848648071289,
+                65.41107177734375,
+                62.21414566040039,
+                61.59564971923828
+              ],
+              "rates_Top_per_s": [
+                44.57238914017849,
+                41.699876139579416,
+                42.32067392845912,
+                44.49535729559972,
+                44.942145307631854
+              ],
+              "best_Top_per_s": 44.942145307631854,
+              "expected_cell": 5120000,
+              "cells_checked": 270336,
+              "mismatches": 0
+            },
+            "u4_s32": {
+              "instruction": "bench_u4",
+              "k": 64,
+              "times_ms": [
+                32.140289306640625,
+                33.21548843383789,
+                32.485504150390625,
+                30.725120544433594,
+                31.34668731689453
+              ],
+              "rates_Top_per_s": [
+                689.0393832087985,
+                666.7348927929387,
+                681.7171442830664,
+                720.7758579164348,
+                706.4837472655137
+              ],
+              "best_Top_per_s": 720.7758579164348,
+              "expected_cell": 40960000,
+              "cells_checked": 270336,
+              "mismatches": 0
+            }
+          }
+        }
+      ],
+      "before": {
+        "name": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "pci.bus_id": "00000000:01:00.0",
+        "driver_version": "617.42",
+        "power.limit": "300.00",
+        "clocks.current.sm": "210",
+        "clocks.current.memory": "405",
+        "utilization.gpu": "13",
+        "temperature.gpu": "32",
+        "power.draw": "11.70",
+        "pstate": "P8"
+      },
+      "after": {
+        "name": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "pci.bus_id": "00000000:01:00.0",
+        "driver_version": "617.42",
+        "power.limit": "300.00",
+        "clocks.current.sm": "2925",
+        "clocks.current.memory": "12001",
+        "utilization.gpu": "2",
+        "temperature.gpu": "37",
+        "power.draw": "88.28",
+        "pstate": "P0"
+      }
+    },
+    {
+      "label": "post-1",
+      "utc": "2026-10-25T13:43:43.776896+00:00",
+      "source_report_sha256": "73bf0850b2b222281c1c3228748db2a3a37b53f35bcc3bf8fcd8da1f1793a3e1",
+      "summary": {
+        "f16_f32": {
+          "median_Top_per_s": 162.20686679698753,
+          "min_Top_per_s": 151.33852255985403,
+          "max_Top_per_s": 166.09995723936902,
+          "measurements": 15,
+          "all_cells_matched": true,
+          "ratio_to_baseline": 1.8396522268981101
+        },
+        "tf32": {
+          "median_Top_per_s": 81.00197676043071,
+          "min_Top_per_s": 77.53793346044375,
+          "max_Top_per_s": 83.19551149240395,
+          "measurements": 15,
+          "all_cells_matched": true,
+          "ratio_to_baseline": 1.8254254911251717
+        },
+        "u4_s32": {
+          "median_Top_per_s": 649.9798072658415,
+          "min_Top_per_s": 618.0322870120207,
+          "max_Top_per_s": 670.4346161965108,
+          "measurements": 15,
+          "all_cells_matched": true,
+          "ratio_to_baseline": 0.9246492407096301
+        }
+      },
+      "processes": [
+        {
+          "process": 1,
+          "modes": {
+            "f16_f32": {
+              "instruction": "bench_f16_f32",
+              "k": 16,
+              "times_ms": [
+                34.10015869140625,
+                33.40390396118164,
+                34.05107116699219,
+                34.19209671020508,
+                34.15654373168945
+              ],
+              "rates_Top_per_s": [
+                162.35939926564848,
+                165.74353963039448,
+                162.59345419262036,
+                161.92283634795538,
+                162.0913791363326
+              ],
+              "best_Top_per_s": 165.74353963039448,
+              "expected_cell": 10240000,
+              "cells_checked": 270336,
+              "mismatches": 0
+            },
+            "tf32": {
+              "instruction": "bench_tf32",
+              "k": 8,
+              "times_ms": [
+                33.90361785888672,
+                34.72895812988281,
+                34.60108947753906,
+                35.46931076049805,
+                33.27391815185547
+              ],
+              "rates_Top_per_s": [
+                81.65030208640098,
+                79.70986718481615,
+                80.00443575041112,
+                78.04607929069128,
+                83.19551149240395
+              ],
+              "best_Top_per_s": 83.19551149240395,
+              "expected_cell": 5120000,
+              "cells_checked": 270336,
+              "mismatches": 0
+            },
+            "u4_s32": {
+              "instruction": "bench_u4",
+              "k": 64,
+              "times_ms": [
+                33.960960388183594,
+                35.62006378173828,
+                33.66502380371094,
+                33.03219223022461,
+                34.19955062866211
+              ],
+              "rates_Top_per_s": [
+                652.0994950338763,
+                621.7261500624766,
+                657.8318568590713,
+                670.4346161965108,
+                647.5501786693023
+              ],
+              "best_Top_per_s": 670.4346161965108,
+              "expected_cell": 40960000,
+              "cells_checked": 270336,
+              "mismatches": 0
+            }
+          }
+        },
+        {
+          "process": 2,
+          "modes": {
+            "f16_f32": {
+              "instruction": "bench_f16_f32",
+              "k": 16,
+              "times_ms": [
+                35.40089416503906,
+                33.483009338378906,
+                36.58342361450195,
+                33.33222579956055,
+                35.3699836730957
+              ],
+              "rates_Top_per_s": [
+                156.39382593526904,
+                165.35196176808316,
+                151.33852255985403,
+                166.09995723936902,
+                156.5305014322453
+              ],
+              "best_Top_per_s": 166.09995723936902,
+              "expected_cell": 10240000,
+              "cells_checked": 270336,
+              "mismatches": 0
+            },
+            "tf32": {
+              "instruction": "bench_tf32",
+              "k": 8,
+              "times_ms": [
+                35.701759338378906,
+                34.0766716003418,
+                33.32921600341797,
+                33.62099075317383,
+                34.17497634887695
+              ],
+              "rates_Top_per_s": [
+                77.53793346044375,
+                81.2356521337088,
+                83.05747845122166,
+                82.33667652220146,
+                81.00197676043071
+              ],
+              "best_Top_per_s": 83.05747845122166,
+              "expected_cell": 5120000,
+              "cells_checked": 270336,
+              "mismatches": 0
+            },
+            "u4_s32": {
+              "instruction": "bench_u4",
+              "k": 64,
+              "times_ms": [
+                34.151424407958984,
+                34.100223541259766,
+                34.15654373168945,
+                33.41209411621094,
+                33.79814529418945
+              ],
+              "rates_Top_per_s": [
+                648.4627070149055,
+                649.4363619993402,
+                648.3655165453304,
+                662.8116466742263,
+                655.2408402069124
+              ],
+              "best_Top_per_s": 662.8116466742263,
+              "expected_cell": 40960000,
+              "cells_checked": 270336,
+              "mismatches": 0
+            }
+          }
+        },
+        {
+          "process": 3,
+          "modes": {
+            "f16_f32": {
+              "instruction": "bench_f16_f32",
+              "k": 16,
+              "times_ms": [
+                35.79391860961914,
+                33.574913024902344,
+                33.758209228515625,
+                34.337791442871094,
+                34.132225036621094
+              ],
+              "rates_Top_per_s": [
+                154.67659018792494,
+                164.89934838829276,
+                164.00399803563405,
+                161.23580018858303,
+                162.20686679698753
+              ],
+              "best_Top_per_s": 164.89934838829276,
+              "expected_cell": 10240000,
+              "cells_checked": 270336,
+              "mismatches": 0
+            },
+            "tf32": {
+              "instruction": "bench_tf32",
+              "k": 8,
+              "times_ms": [
+                34.332672119140625,
+                34.25791931152344,
+                34.01318359375,
+                35.59116744995117,
+                33.77971267700195
+              ],
+              "rates_Top_per_s": [
+                80.629920980042,
+                80.80586023999533,
+                81.38728420907564,
+                77.77886589117205,
+                81.94979828483518
+              ],
+              "best_Top_per_s": 81.94979828483518,
+              "expected_cell": 5120000,
+              "cells_checked": 270336,
+              "mismatches": 0
+            },
+            "u4_s32": {
+              "instruction": "bench_u4",
+              "k": 64,
+              "times_ms": [
+                34.071712493896484,
+                33.549312591552734,
+                35.83295822143555,
+                35.6126708984375,
+                33.50636672973633
+              ],
+              "rates_Top_per_s": [
+                649.9798072658415,
+                660.1007117378628,
+                618.0322870120207,
+                621.8552150485194,
+                660.9467776267687
+              ],
+              "best_Top_per_s": 660.9467776267687,
+              "expected_cell": 40960000,
+              "cells_checked": 270336,
+              "mismatches": 0
+            }
+          }
+        }
+      ],
+      "before": {
+        "name": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "pci.bus_id": "00000000:01:00.0",
+        "driver_version": "617.42",
+        "power.limit": "300.00",
+        "clocks.current.sm": "210",
+        "clocks.current.memory": "405",
+        "utilization.gpu": "29",
+        "temperature.gpu": "31",
+        "power.draw": "14.67",
+        "pstate": "P8"
+      },
+      "after": {
+        "name": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "pci.bus_id": "00000000:01:00.0",
+        "driver_version": "617.42",
+        "power.limit": "300.00",
+        "clocks.current.sm": "2925",
+        "clocks.current.memory": "11751",
+        "utilization.gpu": "47",
+        "temperature.gpu": "39",
+        "power.draw": "89.28",
+        "pstate": "P2"
+      }
+    },
+    {
+      "label": "post-2",
+      "utc": "2026-10-25T13:45:17.427949+00:00",
+      "source_report_sha256": "49f6569df15a6f3d04b15eb2d3041e7abda07c28e83aac32e9d1c0328b5e12e9",
+      "summary": {
+        "f16_f32": {
+          "median_Top_per_s": 144.83190925187637,
+          "min_Top_per_s": 135.4931891585982,
+          "max_Top_per_s": 147.84982102065763,
+          "measurements": 15,
+          "all_cells_matched": true,
+          "ratio_to_baseline": 1.6425959618256287
+        },
+        "tf32": {
+          "median_Top_per_s": 73.09779957795575,
+          "min_Top_per_s": 71.20851089386946,
+          "max_Top_per_s": 74.90399301371662,
+          "measurements": 15,
+          "all_cells_matched": true,
+          "ratio_to_baseline": 1.6473003750192645
+        },
+        "u4_s32": {
+          "median_Top_per_s": 582.5893000070226,
+          "min_Top_per_s": 559.6004901240603,
+          "max_Top_per_s": 594.7169198929157,
+          "measurements": 15,
+          "all_cells_matched": true,
+          "ratio_to_baseline": 0.8287807526868662
+        }
+      },
+      "processes": [
+        {
+          "process": 1,
+          "modes": {
+            "f16_f32": {
+              "instruction": "bench_f16_f32",
+              "k": 16,
+              "times_ms": [
+                39.195648193359375,
+                38.552574157714844,
+                40.8616943359375,
+                40.49612808227539,
+                38.07027053833008
+              ],
+              "rates_Top_per_s": [
+                141.2524485546843,
+                143.6086020443354,
+                135.4931891585982,
+                136.716311958309,
+                145.42794683914147
+              ],
+              "best_Top_per_s": 145.42794683914147,
+              "expected_cell": 10240000,
+              "cells_checked": 270336,
+              "mismatches": 0
+            },
+            "tf32": {
+              "instruction": "bench_tf32",
+              "k": 8,
+              "times_ms": [
+                37.68832015991211,
+                37.98323059082031,
+                37.529598236083984,
+                38.547454833984375,
+                37.336063385009766
+              ],
+              "rates_Top_per_s": [
+                73.45088951309884,
+                72.88060012117613,
+                73.7615314340986,
+                71.8138370463684,
+                74.14388098321673
+              ],
+              "best_Top_per_s": 74.14388098321673,
+              "expected_cell": 5120000,
+              "cells_checked": 270336,
+              "mismatches": 0
+            },
+            "u4_s32": {
+              "instruction": "bench_u4",
+              "k": 64,
+              "times_ms": [
+                38.24345779418945,
+                37.42924880981445,
+                37.789695739746094,
+                37.83475112915039,
+                38.20134353637695
+              ],
+              "rates_Top_per_s": [
+                579.0774787986027,
+                591.6743141848211,
+                586.0307866069312,
+                585.3329137650205,
+                579.7158704355961
+              ],
+              "best_Top_per_s": 591.6743141848211,
+              "expected_cell": 40960000,
+              "cells_checked": 270336,
+              "mismatches": 0
+            }
+          }
+        },
+        {
+          "process": 2,
+          "modes": {
+            "f16_f32": {
+              "instruction": "bench_f16_f32",
+              "k": 16,
+              "times_ms": [
+                37.91667175292969,
+                38.22694396972656,
+                37.4466552734375,
+                39.06252670288086,
+                38.4634895324707
+              ],
+              "rates_Top_per_s": [
+                146.01706911609972,
+                144.83190925187637,
+                147.84982102065763,
+                141.73382387964384,
+                143.94121145264597
+              ],
+              "best_Top_per_s": 147.84982102065763,
+              "expected_cell": 10240000,
+              "cells_checked": 270336,
+              "mismatches": 0
+            },
+            "tf32": {
+              "instruction": "bench_tf32",
+              "k": 8,
+              "times_ms": [
+                37.87036895751953,
+                38.87513732910156,
+                38.31296157836914,
+                37.411041259765625,
+                37.894142150878906
+              ],
+              "rates_Top_per_s": [
+                73.09779957795575,
+                71.20851089386946,
+                72.25337133851073,
+                73.99528446103835,
+                73.05194108836145
+              ],
+              "best_Top_per_s": 73.99528446103835,
+              "expected_cell": 5120000,
+              "cells_checked": 270336,
+              "mismatches": 0
+            },
+            "u4_s32": {
+              "instruction": "bench_u4",
+              "k": 64,
+              "times_ms": [
+                37.23775863647461,
+                37.64121627807617,
+                38.0129280090332,
+                37.54188919067383,
+                38.133758544921875
+              ],
+              "rates_Top_per_s": [
+                594.7169198929157,
+                588.3424424013291,
+                582.5893000070226,
+                589.8990593553161,
+                580.7433089479475
+              ],
+              "best_Top_per_s": 594.7169198929157,
+              "expected_cell": 40960000,
+              "cells_checked": 270336,
+              "mismatches": 0
+            }
+          }
+        },
+        {
+          "process": 3,
+          "modes": {
+            "f16_f32": {
+              "instruction": "bench_f16_f32",
+              "k": 16,
+              "times_ms": [
+                37.82137680053711,
+                37.59001541137695,
+                37.77433776855469,
+                38.27199935913086,
+                37.47225570678711
+              ],
+              "rates_Top_per_s": [
+                146.38497453962003,
+                147.28595398033102,
+                146.56726251356955,
+                144.6614071046465,
+                147.74881243664262
+              ],
+              "best_Top_per_s": 147.74881243664262,
+              "expected_cell": 10240000,
+              "cells_checked": 270336,
+              "mismatches": 0
+            },
+            "tf32": {
+              "instruction": "bench_tf32",
+              "k": 8,
+              "times_ms": [
+                38.117374420166016,
+                36.957183837890625,
+                37.34521484375,
+                38.85465621948242,
+                37.475486755371094
+              ],
+              "rates_Top_per_s": [
+                72.62411648519686,
+                74.90399301371662,
+                74.12571199769883,
+                71.24604640336399,
+                73.86803694026064
+              ],
+              "best_Top_per_s": 74.90399301371662,
+              "expected_cell": 5120000,
+              "cells_checked": 270336,
+              "mismatches": 0
+            },
+            "u4_s32": {
+              "instruction": "bench_u4",
+              "k": 64,
+              "times_ms": [
+                38.73382568359375,
+                39.25708770751953,
+                37.837825775146484,
+                39.574527740478516,
+                38.70390319824219
+              ],
+              "rates_Top_per_s": [
+                571.7463929564855,
+                564.1255226316251,
+                585.2853504745085,
+                559.6004901240603,
+                572.1884174463779
+              ],
+              "best_Top_per_s": 585.2853504745085,
+              "expected_cell": 40960000,
+              "cells_checked": 270336,
+              "mismatches": 0
+            }
+          }
+        }
+      ],
+      "before": {
+        "name": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "pci.bus_id": "00000000:01:00.0",
+        "driver_version": "617.42",
+        "power.limit": "300.00",
+        "clocks.current.sm": "735",
+        "clocks.current.memory": "810",
+        "utilization.gpu": "12",
+        "temperature.gpu": "32",
+        "power.draw": "29.36",
+        "pstate": "P5"
+      },
+      "after": {
+        "name": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "pci.bus_id": "00000000:01:00.0",
+        "driver_version": "617.42",
+        "power.limit": "300.00",
+        "clocks.current.sm": "2925",
+        "clocks.current.memory": "11751",
+        "utilization.gpu": "75",
+        "temperature.gpu": "40",
+        "power.draw": "86.55",
+        "pstate": "P2"
+      }
+    }
+  ],
+  "combined_post_summary": {
+    "f16_f32": {
+      "baseline_median": 88.17257111170905,
+      "post_median": 149.5941717902558,
+      "ratio_to_baseline": 1.6966066646818034,
+      "min": 135.4931891585982,
+      "max": 166.09995723936902,
+      "post_samples": 30,
+      "all_one_checks_passed": true
+    },
+    "tf32": {
+      "baseline_median": 44.374299117791985,
+      "post_median": 76.22096323708018,
+      "ratio_to_baseline": 1.7176826395556342,
+      "min": 71.20851089386946,
+      "max": 83.19551149240395,
+      "post_samples": 30,
+      "all_one_checks_passed": true
+    },
+    "u4_s32": {
+      "baseline_median": 702.9474298459477,
+      "post_median": 606.3746034524681,
+      "ratio_to_baseline": 0.8626172850299152,
+      "min": 559.6004901240603,
+      "max": 670.4346161965108,
+      "post_samples": 30,
+      "all_one_checks_passed": true
+    }
+  },
+  "limits": [
+    "One GPU and one successful manual-U startup; the two post-start benchmark rounds are not two starts.",
+    "FP16/FP32 and TF32 instruction measurements do not establish application speedups.",
+    "All-one output checks do not establish general numerical accuracy.",
+    "BF16 was not directly benchmarked in this Windows setup.",
+    "Clocks were sampled at timed-run boundaries; no continuous telemetry trace was collected.",
+    "Repeated cold/warm starts, sleep/resume and sustained stability remain unverified."
+  ]
+}

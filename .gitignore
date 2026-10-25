@@ -24,3 +24,18 @@
 /debian/gpu-unlock-*/
 modules.order
 Module.symvers
+
+# Windows machine-specific inputs and generated executables stay local.
+/windows/**/*.efi
+/windows/**/*.EFI
+/windows/**/*.exe
+/windows/**/*.bin
+/windows/**/*.BIN
+/windows/**/*.rom
+/windows/**/*.ROM
+/windows/**/*.cubin
+/windows/**/*.ptx
+/windows/**/boot_profile_private.h
+/windows/**/capture_config.h
+/windows/**/capture_graph.h
+/windows/**/capture_usb_paths.h
