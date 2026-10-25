@@ -103,14 +103,22 @@ the Windows driver version. No pip dependencies or MSVC compiler are needed.
 Private profiles/headers, test executables, EFI output, firmware, licenses and build
 manifests stay under `build/windows/`. Full EFI checks require those private inputs
 and generated firmware; the public Python/probe checks above run without them.
-The 177 simulated unlock scenarios cover admission, the real transaction source,
-application flow, driver ownership/release and boot-file handling. Build/check
-commands do not install or execute EFI code or change firmware boot variables.
+The 183 simulated unlock scenarios cover admission, the real transaction source,
+application flow, driver ownership/release and boot-file handling. Another 18 GFW
+status checks cover ready/pending, inaccessible and PRI-error samples. The
+transaction cases include a transient PRI error followed by successful completion
+and a persistent PRI error that times out before starting GPU firmware.
+Build/check commands do not install or execute EFI code or change firmware boot
+variables.
 
 The staged unlock tree is `build/windows/unlock/usb/`. Its build manifest records
 its own source hashes and build ID. `hardware_tested: false` is a build-time fact;
 our later hardware report identifies the exact tested v0.1 EFI separately.
-Publication edits to docs/build-input arguments do not certify a newly built EFI.
+The current source includes the GFW PRI-error polling fix from
+[Zagitta PR #72](https://github.com/Zagitta/gpu-unlock/pull/72). It keeps polling on
+`0xbadfXXXX` register reads within the existing deadline. The hardware report
+covers the original artifact, which predates this fix; a newly built EFI requires
+its own hardware validation.
 
 ## Manual startup and verification
 

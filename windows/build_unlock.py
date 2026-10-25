@@ -89,7 +89,7 @@ def run_logged(command: list[str], name: str) -> None:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--check", action="store_true", help="Run all host integration tests")
-    parser.add_argument("--only-test", choices=("guards", "efi-transaction", "app-flow", "msi-release", "boot-io"))
+    parser.add_argument("--only-test", choices=("gfw-eval", "guards", "efi-transaction", "app-flow", "msi-release", "boot-io"))
     parser.add_argument("--run", type=Path, required=True,
                         help="Reviewed v3 capture directory; original captures stay private")
     parser.add_argument("--private", type=Path, default=ROOT / "build/windows/ad103-2705-profile")
@@ -112,6 +112,7 @@ def main() -> None:
              "-I", str(SOURCE / "compat"), "-I", str(headers), "-I", str(headers / "X64"),
              "-I", str(args.private.resolve())]
     tests = [
+        ("gfw-eval", ["tests/test_gfw_eval.c", "vendor/gfw_eval.c"], []),
         ("guards", ["tests/test_guards.c", *(f"{s}.c" for s in CORE)], [str(args.private / "PROM.BIN"), str(args.assets)]),
         ("efi-transaction", ["tests/test_efi_transaction.c", *(f"{s}.c" for s in CORE)], [str(args.private / "PROM.BIN"), str(args.assets)]),
         ("app-flow", ["tests/test_app_flow.c"], []),

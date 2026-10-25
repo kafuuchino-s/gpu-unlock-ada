@@ -14,6 +14,10 @@ Windows 驱动接管和指令吞吐复测。**
 原构建清单保留构建时的 `hardware_tested: false`，后续实机证据单独记录，不改写
 原始构建和采集文件。
 
+当前源码另补入 [Zagitta PR #72](https://github.com/Zagitta/gpu-unlock/pull/72)
+的 GFW 检查：`0xbadfXXXX` 错误读数会在原有期限内继续轮询，避免误判完成。
+新增构建需单独实机验证；上面的成功记录对应原始 v0.1 文件及其哈希。
+
 已在当前 Windows 主机读到：
 
 | 项目 | 结果 |
@@ -54,7 +58,9 @@ python -m unittest discover -s tests -p 'test_windows_*.py' -v
 命令中的三个输入路径需要换成实际审查过的本地文件；它们不随源码发布。
 已有固定版本依赖及输入缓存时，固件准备可以加 `--offline`。首次完整构建需
 准备该机器的采集、独立 Windows 分区核对和 PROM 的 FWSEC 离线分析；这些
-输入及准入要求见 [English source/build guide](README.md)。
+输入及准入要求见 [English source/build guide](README.md)。完整解锁检查包含
+183 个模拟事务/流程场景及 18 个 GFW 状态用例，覆盖 PRI 错误恢复和持续错误
+超时后在固件启动前退出的路径。
 
 固件准备使用固定输入 SHA-256 和已有 Zig 标准库，生成 5 个运行时固件文件。
 私有输入及输出均位于忽略的 `build/windows/`。构建输出为

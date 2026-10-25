@@ -39,6 +39,16 @@ to documentation and build-input arguments do not revalidate a newly built EFI.
 Repeated starts, sleep/resume, broad numerical behavior and application gains
 remain unverified. Host tests simulate every GPU/firmware operation.
 
+Post-validation change: backport the GFW PRI-error predicate from
+[Zagitta/gpu-unlock PR #72](https://github.com/Zagitta/gpu-unlock/pull/72),
+revision `1cb357f62336adb0537ebcc933ec89c3fe636baf`. Reads in the `0xbadfXXXX`
+family now return `-EAGAIN` before evaluating completion bits; PCI config failures
+and all-ones reads still return `-ENODEV`. The existing polling deadline remains
+in force. Add 18 direct status checks and transient/persistent PRI-error cases
+through the real transaction source for all three entry-selector fixtures.
+These changes affect newly built EFI files; the original hardware-tested v0.1
+artifact and its published evidence remain identified by their original hashes.
+
 The raw RUN01 capture still reports incomplete filesystem enumeration. The
 separate private profile review permits only its one observed OpenVolume
 EFI_NOT_FOUND for an independently identified non-system NTFS data partition.

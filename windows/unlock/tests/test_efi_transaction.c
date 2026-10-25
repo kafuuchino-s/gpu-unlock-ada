@@ -24,6 +24,7 @@ static UINT32 test_entry_ss0=0x60622010U,test_entry_ss1=7;
 #include "../vendor/unlock_610.h"
 #include "../vendor/prep_610.h"
 #include "../vendor/vbios_610.h"
+#include "../vendor/gfw_eval.h"
 #include "../profile.h"
 #include <capture_config.h>
 
@@ -47,6 +48,7 @@ enum scenario {
   CORE_ENTRY_SS0, CORE_ENTRY_SS1, BEFORE_FW_SS0, BEFORE_FW_SS1,
   SELECTOR_ENTRY_SS0, SELECTOR_ENTRY_SS1, PRE_FLR_SS1, LATE_FLR_SS1,
 #endif
+  GFW_PRI_THEN_READY, GFW_PRI_TIMEOUT,
   SCENARIO_COUNT
 };
 static const char *case_names[]={"success","fwsec-timeout","post-flr-gfw-timeout",
@@ -58,6 +60,7 @@ static const char *case_names[]={"success","fwsec-timeout","post-flr-gfw-timeout
   ,"core-entry-ss0","core-entry-ss1","before-fw-ss0","before-fw-ss1",
   "selector-entry-ss0","selector-entry-ss1","pre-flr-ss1","late-flr-ss1"
 #endif
+  ,"gfw-pri-then-ready","gfw-pri-timeout"
 };
 typedef struct {VOID *cpu;UINTN bytes;UINT64 dma;BOOLEAN mapped,freed;} TEST_BUFFER;
 typedef struct {VOID *cpu;BOOLEAN freed;} TEST_POOL;
@@ -75,7 +78,7 @@ static struct {
   UINTN buffer_count,pool_count,pool_live,find_hint;
   UINTN maps,unmaps,frees,live_maps,live_buffers,mmio_writes,pci_writes;
   UINTN gsp_starts,sec2_starts,flrs,flushes,dma_reads,radix_bytes;
-  UINTN dmem_reads,pio_reads,pio_writes,gsp_poll_reads,trace_count;
+  UINTN dmem_reads,pio_reads,pio_writes,gsp_poll_reads,trace_count,gfw_pri_samples;
   UINTN master_enables,master_disables;
   UINT64 pci_attributes;
   UINT32 write_trace[8192][4];
@@ -272,6 +275,17 @@ static EFI_STATUS EFIAPI read_memory(EFI_PCI_IO_PROTOCOL *p,EFI_PCI_IO_PROTOCOL_
     if(fake.mode==BEFORE_FW_SS1)registers[SS1/4]^=1;
   }
 #endif
+  /* Inject only after cold admission/DMA allocation, before any GPU write. */
+  if(fake.maps && !fake.mmio_writes &&
+     (fake.mode==GFW_PRI_THEN_READY || fake.mode==GFW_PRI_TIMEOUT) &&
+     (fake.mode==GFW_PRI_TIMEOUT || fake.gfw_pri_samples<2) &&
+     (offset==GU_GFW_PLM_OFFSET || offset==GU_GFW_BOOT_OFFSET || offset==GU_GFW_CPUCTL_OFFSET)) {
+    CHECK(width==EfiPciIoWidthUint32 && count==1);
+    *(UINT32 *)value=offset==GU_GFW_PLM_OFFSET?0xbadf0001U:
+      offset==GU_GFW_BOOT_OFFSET?0xbadf00ffU:0xbadf0010U;
+    if(offset==GU_GFW_CPUCTL_OFFSET)fake.gfw_pri_samples++;
+    return EFI_SUCCESS;
+  }
   if(offset==GSP+0x1c0 || offset==GSP+0x1c4)fake.pio_reads++;
   if(offset==GSP+0x1c4) {
     UINT32 at=registers[(GSP+0x1c0)/4];
@@ -469,7 +483,8 @@ int main(int argc,char **argv) {
     int result=gpu_unlock_610_load_shared(&device,&shared);CHECK(!result);
     result=gpu_unlock_610_unlock(&device,&shared);gpu_unlock_610_release_shared(&shared);
     BOOLEAN safe=GuSafeToReturn();
-    if(mode==SUCCESS || mode==FWSEC_RUNNING) {
+    if(mode==GFW_PRI_THEN_READY)CHECK(fake.gfw_pri_samples==2);
+    if(mode==SUCCESS || mode==FWSEC_RUNNING || mode==GFW_PRI_THEN_READY) {
       CHECK(!result && safe && Gu.started && Gu.quiesced && !Gu.fault && !Gu.retained);
       CHECK(fake.gsp_starts==1 && fake.sec2_starts==1 && fake.flrs==1 && fake.radix_bytes==0x5053000);
       CHECK(!fake.live_maps && !fake.live_buffers && !Gu.allocations && !fake.pool_live);
@@ -489,6 +504,10 @@ int main(int argc,char **argv) {
         CHECK(!fake.frees);
       }
       if(mode==FWSEC_TIMEOUT)CHECK(fake.gsp_starts==1 && !fake.sec2_starts && !fake.flrs && fake.elapsed>=5000000);
+      if(mode==GFW_PRI_TIMEOUT) {
+        CHECK(result==-ETIMEDOUT && fake.elapsed>=GU_GFW_TIMEOUT_US && fake.gfw_pri_samples>=2);
+        CHECK(!Gu.started && !fake.mmio_writes && !fake.gsp_starts && !fake.sec2_starts && !fake.flrs);
+      }
       if(mode==MAP_FAIL || mode==MAP_PARTIAL)CHECK(!Gu.started && !fake.pci_writes);
       if(mode==MARKER_MISSING || mode==HALT_MISSING || mode==WPR_CFG_CLOSED || mode==WPR_CLOSED || mode==FEAT_CLOSED) {
         CHECK(fake.sec2_starts==1 && !fake.flrs);
@@ -505,7 +524,7 @@ int main(int argc,char **argv) {
 #ifdef GU_ENTRY_LATCHED_SS1_PRESERVE
     for(UINTN i=0;i<fake.trace_count;i++)CHECK(fake.write_trace[i][0] || fake.write_trace[i][2]!=SS1);
 #else
-    if(mode==SUCCESS || mode==FWSEC_RUNNING) {
+    if(mode==SUCCESS || mode==FWSEC_RUNNING || mode==GFW_PRI_THEN_READY) {
       UINTN ss1_writes=0;
       for(UINTN i=0;i<fake.trace_count;i++)if(!fake.write_trace[i][0] && fake.write_trace[i][2]==SS1) {
         CHECK(fake.write_trace[i][3]==8);ss1_writes++;
